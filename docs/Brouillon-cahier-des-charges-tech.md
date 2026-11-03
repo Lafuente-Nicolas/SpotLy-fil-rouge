@@ -253,6 +253,16 @@ Les principales mesures prévues sont :
 
 Le backend constitue la couche de confiance de l'application. Les règles de sécurité ne doivent donc pas uniquement être appliquées dans le frontend : toutes les données reçues par l'API doivent être contrôlées côté serveur.
 
+### Choix retenus
+
+| Besoin | Solution | Décision |
+| --- | --- | --- |
+| Authentification | Session côté serveur (`express-session`) stockée dans PostgreSQL (`connect-pg-simple`), cookie `httpOnly`, `Secure`, `SameSite=Lax` | D23 |
+| Hachage des mots de passe | Argon2id | D23 |
+| Limitation des tentatives de connexion | `express-rate-limit` | D23 |
+| Validation des données | Zod, schémas partagés entre le frontend et l'API | D25 |
+| Géocodage | Nominatim (OpenStreetMap), appelé par l'API avec cache | D24 |
+
 ---
 
 ## 4.14 Performance et éco-conception
@@ -316,6 +326,9 @@ Ces contraintes permettent de rendre l'application utilisable par un public plus
 | Base de données | PostgreSQL 18.6       | Base relationnelle robuste et actuellement supportée                           |
 | ORM             | Prisma                | Accès typé à PostgreSQL et gestion des migrations                              |
 | Médias          | Cloudinary            | Stockage, optimisation et diffusion des images                                 |
+| Authentification | Sessions + Argon2id  | Session révocable, cookie inaccessible aux scripts                              |
+| Validation      | Zod                   | Règles partagées entre le frontend et l'API                                     |
+| Géocodage       | Nominatim             | Gratuit, mondial, cohérent avec OpenStreetMap                                   |
 | Versionnement   | Git                   | Suivi des modifications et collaboration                                       |
 
 ## 4.17 Versions à figer dans le projet
@@ -334,6 +347,7 @@ Les versions exactes suivantes devront être renseignées dans les fichiers de c
 | PostgreSQL     | 18.6                             |
 | Prisma         | À vérifier dans `package.json`   |
 | Cloudinary SDK | À vérifier dans `package.json`   |
+| express-session, connect-pg-simple, argon2, express-rate-limit, Zod | À vérifier dans `package.json` |
 | Git            | À préciser selon l'environnement |
 
 > **Principe de versionnement :** les versions retenues doivent être des versions stables et maintenues au moment de leur adoption. Les versions expérimentales ou arrivées en fin de vie ne sont pas retenues. Les versions exactes des dépendances du projet doivent être figées afin d'assurer la reproductibilité de l'environnement.

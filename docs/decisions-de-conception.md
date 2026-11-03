@@ -278,15 +278,69 @@ La réinitialisation du mot de passe, la vérification de l'adresse e-mail, la m
 
 ---
 
+## D23 — Authentification par session
+
+**Décision :**
+
+- L'utilisateur est authentifié par une **session côté serveur** (bibliothèque `express-session`). Le navigateur ne reçoit qu'un **cookie** contenant l'identifiant de la session.
+- Le cookie est `httpOnly` (illisible par le JavaScript de la page), `Secure` (envoyé seulement en HTTPS) et `SameSite=Lax` (non envoyé par les formulaires d'autres sites).
+- Les sessions sont stockées dans **PostgreSQL** (bibliothèque `connect-pg-simple`). Elles durent **14 jours** et sont prolongées à chaque utilisation.
+- Les mots de passe sont hachés avec **Argon2id**, l'algorithme recommandé par l'OWASP.
+- À la connexion, l'identifiant de session est **régénéré**, pour empêcher qu'un attaquant impose une session connue à l'avance (fixation de session). La déconnexion **détruit** la session.
+- Les tentatives de connexion sont **limitées** (par exemple 5 par minute et par adresse IP), comme le prévoit US-02.
+
+**Alternative écartée : le jeton JWT.** Un JWT reste valable jusqu'à son expiration, même après une déconnexion ou un changement de rôle, sauf à gérer une liste de jetons révoqués. S'il est stocké dans le navigateur, il est exposé au vol par une faille XSS. Il est surtout utile quand plusieurs services ou une application mobile partagent l'authentification, ce qui n'est pas le cas de Spotly.
+
+**Justification :**
+
+- **Sécurité :** la session peut être supprimée immédiatement côté serveur, et le cookie `httpOnly` n'est pas accessible à un script malveillant.
+- **Simplicité :** le frontend et l'API sont servis sous le même domaine. Le navigateur envoie le cookie automatiquement, sans code à écrire côté frontend.
+- **Éco-conception :** la session persistante évite de se reconnecter à chaque visite (voir le [contexte de l'analyse](../eco/context.md)).
+
+**Impact MPD :** une table technique `session` est créée par `connect-pg-simple`. Elle ne fait pas partie du modèle métier (MCD) : elle ne contient que l'identifiant de session, ses données (dont l'identifiant de l'utilisateur) et sa date d'expiration.
+
+---
+
+## D24 — Géocodage avec Nominatim
+
+**Décision :** la recherche d'une ville ou d'une adresse (US-04) utilise **Nominatim**, le service de géocodage d'OpenStreetMap. Les appels passent **par l'API de Spotly**, jamais directement depuis le navigateur.
+
+**Règles d'utilisation respectées** (politique d'utilisation du service public Nominatim) :
+
+- **1 requête par seconde au maximum** pour toute l'application ;
+- un **en-tête `User-Agent`** qui identifie Spotly ;
+- **pas d'autocomplétion** : la recherche d'un lieu part uniquement quand l'utilisateur valide sa saisie ;
+- les résultats sont **mis en cache** par l'API, pour ne pas redemander deux fois le même lieu ;
+- la mention « © OpenStreetMap » reste affichée (déjà prévue par D22).
+
+**Justification :** gratuit, sans clé, mondial (les utilisateurs sont des voyageurs) et cohérent avec les données de la carte. Passer par l'API permet de faire respecter ces règles et de mettre les résultats en cache, ce qui réduit aussi les échanges réseau.
+
+**Solution de repli :** Photon, autre service gratuit basé sur OpenStreetMap, si les limites de Nominatim devenaient gênantes.
+
+**Conséquence :** dans US-04, seule la recherche par mot-clé (traitée par l'API de Spotly) peut partir après une courte pause de saisie. La recherche d'une ville ou d'une adresse part à la validation.
+
+---
+
+## D25 — Validation des données avec Zod
+
+**Décision :** les données reçues par l'API sont validées avec la bibliothèque **Zod**. Les mêmes schémas de validation sont réutilisés par les formulaires du frontend.
+
+**Justification :**
+
+- une seule définition des règles (champs obligatoires, longueurs, coordonnées GPS, 1 à 5 photos…) pour le frontend et l'API, donc pas de règles différentes d'un côté à l'autre ;
+- Zod produit directement les types TypeScript correspondants ;
+- les messages d'erreur peuvent être renvoyés champ par champ, comme le demande US-07.
+
+La validation du frontend sert au confort de l'utilisateur. Celle de l'API reste la seule qui garantit la sécurité.
+
+---
+
 ## Points techniques restant à décider
 
 Ces choix ne changent pas le périmètre fonctionnel. Ils seront tranchés avec le cahier des charges technique.
 
 | Sujet | Question |
 |---|---|
-| Géocodage | Quel service pour la recherche manuelle d'un lieu (repli si la géolocalisation est refusée) ? |
-| Authentification | Session avec cookie `httpOnly` ou jeton JWT ? |
-| Validation serveur | Quelle librairie de validation des entrées ? |
 | Mesure éco | Quels outils et quelles mesures avant/après (EcoIndex, Lighthouse, onglet Réseau) ? |
 | Règles floues du README | Critère de détection d'un spot en doublon ; seuil de masquage automatique après signalements. |
 

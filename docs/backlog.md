@@ -110,7 +110,7 @@ Chaque User Story possède des critères d'acceptation. Ceux des User Stories P2
 - Étant donné que je saisis un mot-clé, quand je lance la recherche, alors les spots dont le titre ou la description contient ce mot-clé sont affichés.
 - Étant donné que je saisis le nom d'une ville ou d'une adresse, quand je valide, alors la carte se recentre sur cette zone et affiche ses spots.
 - Étant donné qu'aucun résultat ne correspond, quand la recherche se termine, alors un message l'indique et me propose de modifier ma recherche.
-- La saisie ne déclenche pas une requête à chaque caractère : la recherche part à la validation ou après une courte pause de saisie.
+- La saisie ne déclenche pas une requête à chaque caractère : la recherche par mot-clé part à la validation ou après une courte pause de saisie. La recherche d'une ville ou d'une adresse part uniquement à la validation (décision D24).
 
 ### US-05 — Filtrer les spots
 
