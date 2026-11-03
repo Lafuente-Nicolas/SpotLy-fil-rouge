@@ -9,6 +9,7 @@ Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 ### Ajouté
 
 - Décision D22 : carte avec MapLibre GL JS, tuiles vectorielles OpenFreeMap et style personnalisé.
+- Décisions D23 à D25 : authentification par session, géocodage avec Nominatim, validation des données avec Zod.
 
 ## [0.1.0] — 2026-11-03 — Conception
 

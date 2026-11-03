@@ -287,7 +287,21 @@ Certaines règles ne peuvent pas être garanties par la base seule. Le backend l
 
 ---
 
-## 11. Étape suivante : le schéma Prisma
+## 11. Table technique des sessions
+
+L'authentification par session (décision D23) ajoute une table `session`, créée et gérée par la bibliothèque `connect-pg-simple` :
+
+| Colonne | Contenu |
+| --- | --- |
+| sid | Identifiant de la session (celui du cookie) |
+| sess | Données de la session, dont l'identifiant de l'utilisateur connecté |
+| expire | Date d'expiration, avec un index pour supprimer les sessions expirées |
+
+Cette table ne fait pas partie du modèle métier : elle n'apparaît ni dans le MCD ni dans le MLD, et elle n'est pas décrite dans le schéma Prisma. Comme elle n'a pas de clé étrangère vers `utilisateur`, l'API supprime elle-même les sessions d'un utilisateur lorsque son compte est supprimé.
+
+---
+
+## 12. Étape suivante : le schéma Prisma
 
 Le fichier `schema.prisma` décrira les mêmes tables sous forme de modèles. La correspondance est directe :
 
