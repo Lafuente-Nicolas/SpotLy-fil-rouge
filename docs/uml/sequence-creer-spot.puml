@@ -1,0 +1,32 @@
+@startuml sequence-creer-spot
+' Diagramme de séquence : créer un spot (US-07)
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam ParticipantBorderColor #0F4C5C
+skinparam ParticipantBackgroundColor #FFFFFF
+skinparam ActorBorderColor #0F4C5C
+skinparam ArrowColor #1E1E1E
+autonumber
+
+actor "Utilisateur" as U
+participant "Frontend" as F
+participant "API" as A
+participant "Cloudinary" as C
+database "Base de données" as B
+
+U -> F : remplit le formulaire\net ajoute 1 à 5 photos
+F -> A : POST /api/spots
+A -> A : vérifie la session et les données
+
+alt données invalides
+  A --> F : 400 Requête invalide + erreurs
+  F --> U : affiche les erreurs
+else données valides
+  A -> C : envoie les photos
+  C --> A : adresses des photos
+  A -> B : enregistre le spot et ses photos
+  B --> A : spot créé
+  A --> F : 201 Créé
+  F --> U : affiche le spot sur la carte
+end
+@enduml

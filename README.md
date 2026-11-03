@@ -155,6 +155,7 @@ Les nuances intermédiaires (textes secondaires, bordures, fonds d'icônes) sont
 ### Technique et éco-conception
 
 - [Cahier des charges technique](docs/Brouillon-cahier-des-charges-tech.md) *(brouillon)*
+- [Conception technique](docs/conception-technique.md) : architecture, routes de l'API et diagrammes de séquence
 - [Démarche d'éco-conception](docs/demarche-eco-conception.md)
 - [Contexte de l'analyse d'éco-conception](eco/context.md)
 - [Analyse des impacts](eco/analyse-des-impacts.md)
