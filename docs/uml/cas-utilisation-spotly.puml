@@ -1,0 +1,86 @@
+@startuml cas-utilisation-spotly
+' Diagramme de cas d'utilisation — Spotly
+' Aligné sur docs/decisions-de-conception.md et docs/backlog.md
+
+left to right direction
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #0F4C5C
+  ArrowColor #1E1E1E
+}
+skinparam actor {
+  BorderColor #0F4C5C
+}
+
+actor "Utilisateur" as U
+actor "Administrateur" as A
+
+rectangle "Spotly" {
+
+  rectangle "Découverte" {
+    usecase "**Découvrir une expérience**\n**locale adaptée à sa situation**" as UC_decouvrir
+    usecase "Choisir la zone\nde recherche" as UC_zone
+    usecase "Utiliser sa\ngéolocalisation" as UC_geo
+    usecase "Rechercher une zone\n(ville, adresse)" as UC_rechercher_zone
+    usecase "Définir son\ntemps disponible" as UC_temps
+    usecase "Filtrer les spots" as UC_filtrer
+    usecase "Rechercher un spot\npar mot-clé" as UC_mot_cle
+    usecase "Consulter le détail\nd'un spot" as UC_detail
+  }
+
+  rectangle "Compte" {
+    usecase "S'inscrire" as UC_inscrire
+    usecase "Se connecter" as UC_connecter
+    usecase "Se déconnecter" as UC_deconnecter
+    usecase "Gérer son profil" as UC_profil
+  }
+
+  rectangle "Contribution et interactions" {
+    usecase "Créer un spot" as UC_creer
+    usecase "Gérer ses spots" as UC_gerer_spots
+    usecase "Gérer ses favoris" as UC_favoris
+    usecase "Noter un spot" as UC_noter
+    usecase "Commenter un spot" as UC_commenter
+    usecase "Signaler un contenu" as UC_signaler
+  }
+
+  rectangle "Modération" {
+    usecase "Masquer un spot" as UC_masquer
+    usecase "Traiter les signalements" as UC_traiter
+  }
+}
+
+' L'administrateur est un utilisateur : il hérite de tous ses cas d'utilisation
+U <|-- A
+
+' --- Associations de l'utilisateur ---
+U --> UC_decouvrir
+U --> UC_inscrire
+U --> UC_connecter
+U --> UC_deconnecter
+U --> UC_profil
+U --> UC_creer
+U --> UC_gerer_spots
+U --> UC_favoris
+U --> UC_noter
+U --> UC_commenter
+U --> UC_signaler
+
+' --- Associations propres à l'administrateur ---
+A --> UC_masquer
+A --> UC_traiter
+
+' --- Découverte : la zone de recherche est obligatoire ---
+UC_decouvrir ..> UC_zone : <<include>>
+UC_zone <|-- UC_geo
+UC_zone <|-- UC_rechercher_zone
+
+' --- Découverte : affinages facultatifs ---
+UC_decouvrir <.. UC_temps : <<extend>>
+UC_decouvrir <.. UC_filtrer : <<extend>>
+UC_decouvrir <.. UC_mot_cle : <<extend>>
+UC_decouvrir <.. UC_detail : <<extend>>
+
+@enduml
