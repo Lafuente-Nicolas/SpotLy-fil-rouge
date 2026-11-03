@@ -1,0 +1,39 @@
+@startuml architecture-spotly
+' Architecture technique de Spotly : les composants et leurs échanges
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam componentStyle rectangle
+skinparam ArrowColor #1E1E1E
+skinparam rectangle {
+  BorderColor #0F4C5C
+  BackgroundColor #FFFFFF
+}
+skinparam database {
+  BorderColor #0F4C5C
+  BackgroundColor #FFFFFF
+}
+skinparam cloud {
+  BorderColor #7A9E7E
+  BackgroundColor #F5F5F5
+}
+
+rectangle "Navigateur (smartphone ou ordinateur)" as NAV {
+  rectangle "Frontend\nReact + TypeScript (Vite)\nTailwind CSS\nCarte MapLibre GL JS" as FRONT
+}
+
+rectangle "Serveur" as SRV {
+  rectangle "API REST\nNode.js + Express (TypeScript)\nSessions, validation Zod, droits" as API
+  database "PostgreSQL\n(accès via Prisma)" as BDD
+}
+
+cloud "Cloudinary\n(stockage et diffusion\ndes images)" as CLOUD
+cloud "OpenFreeMap\n(tuiles de la carte)" as TUILES
+cloud "Nominatim\n(géocodage)" as GEO
+
+FRONT --> API : requêtes HTTPS (JSON)\ncookie de session
+API --> BDD : requêtes SQL
+API --> CLOUD : envoi et suppression\ndes photos
+API --> GEO : recherche d'un lieu\n(résultats en cache)
+FRONT --> CLOUD : affichage des photos\noptimisées
+FRONT --> TUILES : chargement\ndes tuiles
+@enduml

@@ -1,0 +1,30 @@
+@startuml sequence-connexion
+' Diagramme de séquence : se connecter (US-02)
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam ParticipantBorderColor #0F4C5C
+skinparam ParticipantBackgroundColor #FFFFFF
+skinparam ActorBorderColor #0F4C5C
+skinparam ArrowColor #1E1E1E
+autonumber
+
+actor "Utilisateur" as U
+participant "Frontend" as F
+participant "API" as A
+database "Base de données" as B
+
+U -> F : saisit son e-mail et son mot de passe
+F -> A : POST /api/auth/connexion
+A -> B : cherche l'utilisateur par son e-mail
+B --> A : utilisateur
+A -> A : vérifie le mot de passe
+
+alt identifiants incorrects
+  A --> F : 401 Non autorisé
+  F --> U : « E-mail ou mot de passe incorrect »
+else identifiants corrects
+  A -> B : enregistre la session
+  A --> F : 200 OK + cookie de session
+  F --> U : affiche la carte
+end
+@enduml
