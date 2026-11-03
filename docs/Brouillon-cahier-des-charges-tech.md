@@ -110,6 +110,14 @@ La version **6.x** est retenue car MapLibre GL JS 6 est désormais une version m
 
 Le choix de MapLibre est également cohérent avec le besoin de disposer d'une solution de cartographie flexible et adaptée à une application web moderne.
 
+### Fond de carte — OpenFreeMap
+
+MapLibre affiche la carte, mais les données du fond de carte viennent d'un **fournisseur de tuiles**. Spotly utilise les tuiles vectorielles d'**OpenFreeMap**, issues d'OpenStreetMap : elles sont gratuites, sans inscription ni clé d'accès. La mention « © OpenStreetMap » est affichée sur la carte.
+
+Le style de la carte est personnalisé aux couleurs de la charte graphique avec l'éditeur Maputnik. Les tuiles vectorielles sont plus légères que des tuiles en images et s'adaptent à ce style.
+
+Ces choix sont justifiés dans la décision **D22** des [décisions de conception](decisions-de-conception.md).
+
 ---
 
 ## 4.7 Backend — Node.js 24.20.0 LTS
@@ -302,7 +310,7 @@ Ces contraintes permettent de rendre l'application utilisable par un public plus
 | Build           | Vite 8.1              | Développement rapide et chaîne de build moderne                                |
 | Langage         | TypeScript            | Typage statique et meilleure maintenabilité                                    |
 | CSS             | Tailwind CSS          | Responsive mobile-first et cohérence de l'interface                            |
-| Cartographie    | MapLibre GL JS 6.x    | Gestion de la carte interactive et des données géographiques                   |
+| Cartographie    | MapLibre GL JS 6.x + tuiles OpenFreeMap | Carte interactive libre, tuiles vectorielles gratuites et légères |
 | Runtime backend | Node.js 24.20.0 LTS   | Stabilité, maintenance et support à long terme                                 |
 | API             | Express 5.x           | API REST légère et flexible                                                    |
 | Base de données | PostgreSQL 18.6       | Base relationnelle robuste et actuellement supportée                           |

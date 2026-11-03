@@ -67,7 +67,7 @@ Ces évolutions ne font pas partie du MVP.
 | --- | --- |
 | Interface | React, TypeScript, Vite |
 | Styles | Tailwind CSS |
-| Cartographie | MapLibre GL JS |
+| Cartographie | MapLibre GL JS, tuiles vectorielles OpenFreeMap (OpenStreetMap) |
 | API | Node.js, Express (API REST) |
 | Base de données | PostgreSQL, Prisma |
 | Médias | Cloudinary |
