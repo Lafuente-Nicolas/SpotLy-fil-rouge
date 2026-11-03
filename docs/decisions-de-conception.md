@@ -251,13 +251,39 @@ La réinitialisation du mot de passe, la vérification de l'adresse e-mail, la m
 
 ---
 
+## D22 — Carte : bibliothèque, tuiles et style
+
+**Décision :**
+
+- **Bibliothèque :** MapLibre GL JS.
+- **Fond de carte :** les tuiles **vectorielles** d'**OpenFreeMap**, construites à partir des données OpenStreetMap. La mention « © OpenStreetMap » reste affichée sur la carte.
+- **Style :** un style personnalisé aux couleurs de la charte (D17) : fond vert-gris clair, routes blanches, eau bleu-vert, peu d'étiquettes. Il est réalisé avec l'éditeur Maputnik à partir d'un style OpenFreeMap épuré, pendant le prototype de la carte.
+
+**Alternatives écartées :**
+
+| Solution | Raison |
+|---|---|
+| Mapbox GL JS | Bibliothèque propriétaire, compte et clé obligatoires, payante au-delà du quota gratuit. Elle rend le projet dépendant d'un seul fournisseur. |
+| Offre gratuite de MapTiler | Nombre de sessions limité, logo obligatoire, usage prévu pour les tests et le non-commercial. Elle reste une solution de repli. |
+| Tuiles raster (images) | Plus lourdes et impossibles à adapter à la charte graphique. |
+
+**Justification :**
+
+- **Coût :** MapLibre est libre, et OpenFreeMap ne demande ni inscription, ni clé, ni paiement.
+- **Indépendance :** MapLibre accepte n'importe quel fournisseur de tuiles. On peut en changer sans modifier le code de la carte, seulement l'adresse du style.
+- **Éco-conception :** les tuiles vectorielles sont plus légères que des images, et un style épuré charge moins de données. La carte étant l'un des deux postes d'impact les plus élevés de l'[analyse des impacts](../eco/analyse-des-impacts.md), ce choix a un effet direct.
+- **Maquette :** un style vectoriel se règle couleur par couleur, ce qui permet de reproduire l'apparence de la maquette.
+
+**Points à vérifier pendant le prototype :** le poids des tuiles et du style, le nombre de requêtes à l'ouverture de la carte, et le rendu des marqueurs par catégorie sur le fond choisi.
+
+---
+
 ## Points techniques restant à décider
 
 Ces choix ne changent pas le périmètre fonctionnel. Ils seront tranchés avec le cahier des charges technique.
 
 | Sujet | Question |
 |---|---|
-| Tuiles cartographiques | Quel fournisseur de tuiles pour MapLibre ? Impact élevé selon l'analyse éco. |
 | Géocodage | Quel service pour la recherche manuelle d'un lieu (repli si la géolocalisation est refusée) ? |
 | Authentification | Session avec cookie `httpOnly` ou jeton JWT ? |
 | Validation serveur | Quelle librairie de validation des entrées ? |
