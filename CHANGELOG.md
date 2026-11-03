@@ -6,6 +6,19 @@ Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 
 ## [Non publié]
 
+## [0.2.0] — 2026-11-03 — Conception technique
+
+### Ajouté
+
+- Décision D22 : carte avec MapLibre GL JS, tuiles vectorielles OpenFreeMap et style personnalisé.
+- Décisions D23 à D25 : authentification par session, géocodage avec Nominatim, validation des données avec Zod.
+- Conception technique : schéma d'architecture, routes de l'API et diagrammes de séquence (connexion, création d'un spot).
+
+### Modifié
+
+- US-04 : la recherche d'une ville ou d'une adresse part uniquement à la validation, pour respecter la politique d'utilisation de Nominatim.
+- MPD : ajout de la table technique des sessions.
+
 ## [0.1.0] — 2026-11-03 — Conception
 
 ### Ajouté

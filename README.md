@@ -12,7 +12,7 @@ Projet réalisé dans le cadre du titre professionnel **Concepteur Développeur 
 
 ## État du projet
 
-Le projet est en **phase de conception**. Les spécifications fonctionnelles, les cas d'utilisation, le backlog, les maquettes et la modélisation des données (MCD, MLD et MPD) sont réalisés. Le cahier des charges technique est en cours de rédaction et le développement n'a pas encore commencé.
+Le projet est en **phase de conception**. Les spécifications fonctionnelles, les cas d'utilisation, le backlog, les maquettes, la modélisation des données (MCD, MLD et MPD) et la conception technique (architecture, routes de l'API, diagrammes de séquence) sont réalisés. Le développement n'a pas encore commencé.
 
 ---
 
@@ -67,7 +67,7 @@ Ces évolutions ne font pas partie du MVP.
 | --- | --- |
 | Interface | React, TypeScript, Vite |
 | Styles | Tailwind CSS |
-| Cartographie | MapLibre GL JS |
+| Cartographie | MapLibre GL JS, tuiles vectorielles OpenFreeMap (OpenStreetMap) |
 | API | Node.js, Express (API REST) |
 | Base de données | PostgreSQL, Prisma |
 | Médias | Cloudinary |
@@ -155,6 +155,7 @@ Les nuances intermédiaires (textes secondaires, bordures, fonds d'icônes) sont
 ### Technique et éco-conception
 
 - [Cahier des charges technique](docs/Brouillon-cahier-des-charges-tech.md) *(brouillon)*
+- [Conception technique](docs/conception-technique.md) : architecture, routes de l'API et diagrammes de séquence
 - [Démarche d'éco-conception](docs/demarche-eco-conception.md)
 - [Contexte de l'analyse d'éco-conception](eco/context.md)
 - [Analyse des impacts](eco/analyse-des-impacts.md)
