@@ -1,0 +1,9 @@
+# Fins de ligne identiques sous Windows, macOS et Linux
+* text=auto eol=lf
+
+# Fichiers binaires : jamais modifiés par Git
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.loo binary
