@@ -1,8 +1,7 @@
 @startuml sequence-connexion
-' Diagramme de séquence : se connecter (US-02, décision D23)
+' Diagramme de séquence : se connecter (US-02)
 skinparam shadowing false
 skinparam defaultFontName Arial
-skinparam sequenceMessageAlign left
 skinparam ParticipantBorderColor #0F4C5C
 skinparam ParticipantBackgroundColor #FFFFFF
 skinparam ActorBorderColor #0F4C5C
@@ -10,31 +9,22 @@ skinparam ArrowColor #1E1E1E
 autonumber
 
 actor "Utilisateur" as U
-participant "Frontend\n(React)" as F
-participant "API\n(Express)" as A
-database "PostgreSQL" as B
+participant "Frontend" as F
+participant "API" as A
+database "Base de données" as B
 
 U -> F : saisit son e-mail et son mot de passe
-F -> F : vérifie le format des champs (Zod)
-F -> A : POST /api/auth/connexion\n{ email, motDePasse }
-A -> A : limite les tentatives\n(5 par minute et par adresse IP)
-A -> A : valide les données (Zod)
+F -> A : POST /api/auth/connexion
 A -> B : cherche l'utilisateur par son e-mail
-B --> A : utilisateur (ou aucun résultat)
-A -> A : compare le mot de passe à son empreinte (Argon2id)\n(avec une empreinte factice si l'e-mail est inconnu,\npour que la réponse prenne toujours le même temps)
+B --> A : utilisateur
+A -> A : vérifie le mot de passe
 
-alt e-mail inconnu ou mot de passe incorrect
-  A --> F : 401 « E-mail ou mot de passe incorrect »
-  F --> U : affiche le message générique
+alt identifiants incorrects
+  A --> F : 401 Non autorisé
+  F --> U : « E-mail ou mot de passe incorrect »
 else identifiants corrects
-  A -> A : régénère l'identifiant de session
-  A -> B : enregistre la session\n(identifiant de l'utilisateur, expiration)
-  A --> F : 200 { pseudo, role }\n+ cookie de session (httpOnly, Secure, SameSite=Lax)
-  F --> U : redirige vers la carte
+  A -> B : enregistre la session
+  A --> F : 200 OK + cookie de session
+  F --> U : affiche la carte
 end
-
-note over F, A
-  Ensuite, le navigateur envoie le cookie à chaque requête.
-  L'API retrouve la session et l'utilisateur connecté.
-end note
 @enduml

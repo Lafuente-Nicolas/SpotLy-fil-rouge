@@ -121,7 +121,7 @@ Un spot masqué ou supprimé renvoie **404**, et non 403. Pour l'utilisateur, il
 
 ## 3. Diagrammes de séquence
 
-Un diagramme de séquence montre, dans l'ordre, les messages échangés entre l'utilisateur et les différentes parties de l'application pour réaliser une action. Les blocs `alt` représentent les cas alternatifs, et `loop` une répétition.
+Un diagramme de séquence montre, dans l'ordre, les messages échangés entre l'utilisateur et les différentes parties de l'application pour réaliser une action. Le bloc `alt` représente les deux issues possibles.
 
 ### 3.1 Se connecter (US-02)
 
@@ -129,13 +129,9 @@ Un diagramme de séquence montre, dans l'ordre, les messages échangés entre l'
 
 *Source : [uml/sequence-connexion.puml](uml/sequence-connexion.puml).*
 
-**Points importants :**
-
-- **Message générique** (étape 9) : l'API ne dit pas si c'est l'e-mail ou le mot de passe qui est faux. Sinon, un attaquant pourrait découvrir quelles adresses ont un compte.
-- **Temps de réponse constant** (étape 8) : si l'e-mail est inconnu, l'API calcule quand même une empreinte factice. Une réponse plus rapide trahirait qu'aucun compte n'existe.
-- **Limitation des tentatives** (étape 4) : elle freine les attaques qui essaient des milliers de mots de passe.
-- **Régénération de la session** (étape 11) : elle empêche un attaquant d'imposer à l'utilisateur un identifiant de session qu'il connaît déjà.
-- **Cookie `httpOnly`** (étape 13) : le JavaScript de la page ne peut pas le lire, donc un script malveillant ne peut pas le voler.
+- **Étape 5 :** l'API compare le mot de passe saisi à son empreinte enregistrée (Argon2id). Le mot de passe n'est jamais stocké en clair.
+- **Étape 7 :** le message reste le même, que l'e-mail ou le mot de passe soit faux. Un attaquant ne peut donc pas savoir quelles adresses ont un compte.
+- **Étapes 8 et 9 :** l'API crée une session et renvoie un cookie `httpOnly`, que le JavaScript de la page ne peut pas lire. Le navigateur le renvoie ensuite à chaque requête, ce qui permet à l'API de savoir qui est connecté (décision D23).
 
 ### 3.2 Créer un spot (US-07)
 
@@ -143,10 +139,7 @@ Un diagramme de séquence montre, dans l'ordre, les messages échangés entre l'
 
 *Source : [uml/sequence-creer-spot.puml](uml/sequence-creer-spot.puml).*
 
-**Points importants :**
-
-- **Double validation** : le frontend vérifie le formulaire pour le confort de l'utilisateur (étape 2), mais seule la validation de l'API (étape 8) garantit les données.
-- **Photos vérifiées par l'API** : nombre (1 à 5), type (JPEG, PNG, WebP) et poids, avant tout envoi à Cloudinary.
-- **Transaction** (étape 13) : le spot, ses photos et ses tags sont enregistrés ensemble. Si une seule insertion échoue, rien n'est enregistré, et on n'obtient jamais un spot sans photo.
-- **Pas d'image orpheline** (étape 15) : en cas d'erreur, les photos déjà envoyées sont supprimées de Cloudinary, pour ne pas stocker de fichiers inutiles (éco-conception).
-- **Publication immédiate** : le spot est enregistré avec le statut `PUBLIE` (décision D4) et apparaît aussitôt sur la carte.
+- **Étape 3 :** l'API vérifie que l'utilisateur est connecté, puis valide les données avec Zod : champs obligatoires, coordonnées GPS, 1 à 5 photos au bon format et au bon poids. Le formulaire du frontend fait les mêmes vérifications, mais seule celle de l'API garantit la sécurité.
+- **Étapes 6 et 7 :** les photos sont envoyées à Cloudinary, qui les stocke et les optimise. La base n'enregistre que leur adresse et leur identifiant (éco-conception).
+- **Étape 8 :** le spot, ses photos et ses tags sont enregistrés dans une **transaction** : tout est enregistré, ou rien. En cas d'erreur, l'API supprime les photos déjà envoyées à Cloudinary.
+- **Étape 11 :** le spot est publié immédiatement (décision D4) et apparaît sur la carte.
