@@ -69,7 +69,7 @@ Ce choix est particulièrement pertinent pour Spotly car l'application manipule 
 
 L'utilisation de TypeScript sur le frontend et le backend permet également de conserver une cohérence dans la manière dont les données sont manipulées dans l'ensemble de l'application.
 
-**Version : à renseigner selon la version réellement utilisée dans le projet.**
+**Version retenue : TypeScript 6.0** (6.0.3 installée dans le backend). C'est la version stable la plus récente au moment de l'initialisation du projet. Elle est compatible avec les outils de qualité du code (typescript-eslint), et la compilation du backend passe sans erreur.
 
 La version exacte doit être figée dans les dépendances du projet afin d'assurer la reproductibilité de l'environnement.
 
@@ -120,13 +120,13 @@ Ces choix sont justifiés dans la décision **D22** des [décisions de conceptio
 
 ---
 
-## 4.7 Backend — Node.js 24.20.0 LTS
+## 4.7 Backend — Node.js 24 LTS
 
 Node.js est utilisé comme environnement d'exécution du backend.
 
 Le choix de Node.js permet de développer le serveur avec le même écosystème JavaScript/TypeScript que le frontend.
 
-La version **24.20.0 LTS** est retenue pour le projet.
+La branche **24 LTS** est retenue pour le projet (24.22.2 installée). Elle est indiquée dans le fichier `.nvmrc` à la racine du dépôt : la commande `nvm use` sélectionne automatiquement cette version.
 
 Le choix d'une version LTS est volontaire : contrairement à une version *Current*, une version LTS est destinée aux applications nécessitant une meilleure stabilité et une maintenance sur la durée. La documentation officielle de Node.js recommande d'utiliser les versions Active LTS ou Maintenance LTS pour les applications en production.
 
@@ -157,7 +157,27 @@ Cette approche permet de ne pas imposer une architecture trop lourde au projet e
 
 La branche **Express 5.x** est privilégiée afin de rester sur une version majeure moderne et maintenue.
 
-**Version exacte : à renseigner selon la version installée dans le projet.**
+**Version installée : Express 5.3.0.**
+
+### Organisation du code de l'API
+
+Le code est séparé en couches, chacune avec un rôle précis :
+
+* **routes** : associent une adresse et une méthode HTTP (par exemple `GET /api/sante`) à une fonction ;
+* **contrôleurs** : reçoivent la requête et renvoient la réponse ;
+* **services** (à venir) : contiennent la logique métier et l'accès à la base de données.
+
+Cette séparation rend le code plus lisible, plus facile à tester et à faire évoluer.
+
+### Outils de développement du backend
+
+| Outil | Version | Rôle | Pourquoi ce choix |
+| --- | --- | --- | --- |
+| tsx | 4.23 | Exécute le TypeScript directement en développement et redémarre l'API à chaque modification | Évite de recompiler à la main pendant le développement |
+| ESLint (+ typescript-eslint) | 10.14 | Détecte les erreurs probables et les mauvaises pratiques | Améliore la **qualité** du code |
+| Prettier | 3.9 | Met le code en forme automatiquement | Garantit une **présentation** identique dans tout le projet, backend et frontend |
+
+Les variables d'environnement (port, connexion à la base) sont lues avec l'option `--env-file` intégrée à Node.js 24. Aucune bibliothèque supplémentaire n'est donc nécessaire, ce qui limite les dépendances (éco-conception).
 
 ---
 
@@ -177,7 +197,7 @@ Par exemple :
 
 Une base relationnelle permet donc de représenter clairement ces relations et de garantir l'intégrité des données.
 
-La version **18.6** est retenue car PostgreSQL 18 est actuellement une version majeure supportée et 18.6 correspond à une version corrective récente. PostgreSQL recommande l'utilisation de la dernière version mineure disponible d'une branche supportée, notamment pour bénéficier des corrections de bugs et de sécurité.
+La branche **18** est retenue car c'est une version majeure actuellement supportée. Elle est fournie par l'image Docker `postgres:18-alpine` (décision D26), qui contient la dernière version corrective de cette branche : **18.6** au moment de l'installation. PostgreSQL recommande l'utilisation de la dernière version mineure disponible d'une branche supportée, notamment pour bénéficier des corrections de bugs et de sécurité.
 
 Le choix d'une version supportée permet d'éviter d'utiliser une version ancienne qui ne reçoit plus de correctifs.
 
@@ -318,11 +338,11 @@ Ces contraintes permettent de rendre l'application utilisable par un public plus
 | --------------- | --------------------- | ------------------------------------------------------------------------------ |
 | Interface       | React 19.2            | Interface interactive basée sur des composants réutilisables et version stable |
 | Build           | Vite 8.1              | Développement rapide et chaîne de build moderne                                |
-| Langage         | TypeScript            | Typage statique et meilleure maintenabilité                                    |
+| Langage         | TypeScript 6.0        | Typage statique et meilleure maintenabilité                                    |
 | CSS             | Tailwind CSS          | Responsive mobile-first et cohérence de l'interface                            |
 | Cartographie    | MapLibre GL JS 6.x + tuiles OpenFreeMap | Carte interactive libre, tuiles vectorielles gratuites et légères |
-| Runtime backend | Node.js 24.20.0 LTS   | Stabilité, maintenance et support à long terme                                 |
-| API             | Express 5.x           | API REST légère et flexible                                                    |
+| Runtime backend | Node.js 24 LTS        | Stabilité, maintenance et support à long terme                                 |
+| API             | Express 5.3           | API REST légère et flexible                                                    |
 | Base de données | PostgreSQL 18.6       | Base relationnelle robuste et actuellement supportée                           |
 | ORM             | Prisma                | Accès typé à PostgreSQL et gestion des migrations                              |
 | Médias          | Cloudinary            | Stockage, optimisation et diffusion des images                                 |
@@ -338,14 +358,15 @@ Les versions exactes suivantes devront être renseignées dans les fichiers de c
 
 | Technologie    | Version                          |
 | -------------- | -------------------------------- |
-| Node.js        | 24.20.0 LTS                      |
+| Node.js        | 24.22.2 LTS (fixée par `.nvmrc`) |
 | React          | 19.2                             |
 | Vite           | 8.1.x                            |
-| TypeScript     | À vérifier dans `package.json`   |
+| TypeScript     | 6.0.3                            |
 | Tailwind CSS   | À vérifier dans `package.json`   |
 | MapLibre GL JS | 6.x                              |
-| Express        | 5.x                              |
-| PostgreSQL     | 18.6                             |
+| Express        | 5.3.0                            |
+| Outils backend | tsx 4.23, ESLint 10.14, Prettier 3.9 |
+| PostgreSQL     | 18.6 (image `postgres:18-alpine`) |
 | Prisma         | À vérifier dans `package.json`   |
 | Cloudinary SDK | À vérifier dans `package.json`   |
 | express-session, connect-pg-simple, argon2, express-rate-limit, Zod | À vérifier dans `package.json` |

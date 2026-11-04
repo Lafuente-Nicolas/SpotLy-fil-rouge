@@ -103,7 +103,25 @@ Commandes utiles :
 | `docker compose ps` | Vérifier que la base tourne |
 | `docker compose down` | Arrêter la base (les données sont conservées) |
 
-Les instructions pour lancer l'API et le frontend seront ajoutées avec leur mise en place.
+### Lancer l'API
+
+```bash
+nvm use            # utilise Node 24 (version indiquée dans .nvmrc)
+cd backend
+npm install
+npm run dev        # démarre l'API sur http://localhost:3000
+```
+
+Pour vérifier qu'elle répond, ouvrir http://localhost:3000/api/sante : la réponse doit être `{"statut":"ok"}`.
+
+| Commande (dans `backend/`) | Effet |
+| --- | --- |
+| `npm run dev` | Démarrer l'API en développement (redémarre à chaque modification) |
+| `npm run build` | Compiler le TypeScript dans `dist/` |
+| `npm run lint` | Vérifier la qualité du code (ESLint) |
+| `npm run format` | Mettre en forme le code (Prettier) |
+
+Les instructions pour lancer le frontend seront ajoutées avec sa mise en place.
 
 ---
 
