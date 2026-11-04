@@ -99,11 +99,9 @@ Commandes utiles :
 
 | Commande | Effet |
 | --- | --- |
-| `docker compose ps` | Voir si la base tourne (état `healthy` quand elle est prête) |
-| `docker compose logs db` | Afficher les messages de PostgreSQL |
+| `docker compose up -d` | Démarrer la base |
+| `docker compose ps` | Vérifier que la base tourne |
 | `docker compose down` | Arrêter la base (les données sont conservées) |
-| `docker compose down -v` | Arrêter la base **et supprimer ses données** |
-| `docker compose exec db psql -U spotly -d spotly` | Ouvrir une console SQL dans la base |
 
 Les instructions pour lancer l'API et le frontend seront ajoutées avec leur mise en place.
 

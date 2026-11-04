@@ -1,25 +1,19 @@
-# Environnement de développement de Spotly : base de données PostgreSQL.
-# Démarrer : docker compose up -d    |    Arrêter : docker compose down
+# Base de données PostgreSQL pour le développement de Spotly.
+# Démarrer : docker compose up -d   |   Arrêter : docker compose down
 # Les identifiants sont lus dans le fichier .env (copié depuis .env.example).
 
 services:
   db:
-    image: postgres:18-alpine          # version majeure figée, image légère
+    image: postgres:18-alpine
     container_name: spotly-db
-    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "5432:5432"
     volumes:
-      - spotly-db-data:/var/lib/postgresql   # les données sont conservées entre deux redémarrages
-    healthcheck:                             # indique quand la base est prête à recevoir des connexions
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - spotly-db-data:/var/lib/postgresql
 
 volumes:
   spotly-db-data:
