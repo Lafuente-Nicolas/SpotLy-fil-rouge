@@ -330,6 +330,7 @@ Ces contraintes permettent de rendre l'application utilisable par un public plus
 | Validation      | Zod                   | Règles partagées entre le frontend et l'API                                     |
 | Géocodage       | Nominatim             | Gratuit, mondial, cohérent avec OpenStreetMap                                   |
 | Versionnement   | Git                   | Suivi des modifications et collaboration                                       |
+| Environnement   | Docker, Docker Compose | Base de données reproductible en développement, conteneurs au déploiement (D26) |
 
 ## 4.17 Versions à figer dans le projet
 
