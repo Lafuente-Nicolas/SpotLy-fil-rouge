@@ -8,6 +8,8 @@ Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 
 ### Ajouté
 
+- Initialisation du backend : Express et TypeScript, route de test `GET /api/sante`, ESLint et Prettier, version de Node fixée par `.nvmrc`.
+
 - Base de données PostgreSQL pour le développement avec Docker Compose, modèle des variables d'environnement (`.env.example`) et décision D26.
 - Instructions d'installation dans le README.
 

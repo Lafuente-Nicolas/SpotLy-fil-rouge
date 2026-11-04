@@ -1,0 +1,27 @@
+{
+  "name": "spotly-backend",
+  "version": "0.2.0",
+  "private": true,
+  "description": "API REST de Spotly",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file=../.env src/server.ts",
+    "build": "tsc",
+    "start": "node --env-file=../.env dist/server.js",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.14.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.1"
+  }
+}
