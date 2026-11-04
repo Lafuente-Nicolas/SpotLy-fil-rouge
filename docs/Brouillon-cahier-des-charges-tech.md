@@ -219,9 +219,11 @@ Le choix de Prisma est particulièrement adapté à Spotly en raison de l'utilis
 
 Le typage généré par Prisma permet de limiter les erreurs lors de la manipulation des données et améliore la maintenabilité du projet.
 
-**Version : à renseigner selon la version réellement utilisée dans le projet.**
+**Version installée : Prisma 7.10.1.** C'est la dernière version stable : Prisma 8 n'est encore qu'une version de test (*release candidate*) au moment de l'installation.
 
-La version devra être figée afin de garantir la reproductibilité de l'environnement.
+Prisma 7 se connecte à PostgreSQL par un **adaptateur** (`@prisma/adapter-pg`, qui utilise le pilote `pg`). Sa configuration (schéma, migrations, adresse de la base, script des données de départ) est regroupée dans le fichier `backend/prisma.config.ts`.
+
+Prisma ne sait pas déclarer les contraintes `CHECK` du MPD : elles sont ajoutées à la main dans le fichier SQL de la première migration (voir le [MPD](mpd.md), section 12).
 
 ---
 
@@ -344,7 +346,7 @@ Ces contraintes permettent de rendre l'application utilisable par un public plus
 | Runtime backend | Node.js 24 LTS        | Stabilité, maintenance et support à long terme                                 |
 | API             | Express 5.3           | API REST légère et flexible                                                    |
 | Base de données | PostgreSQL 18.6       | Base relationnelle robuste et actuellement supportée                           |
-| ORM             | Prisma                | Accès typé à PostgreSQL et gestion des migrations                              |
+| ORM             | Prisma 7.10           | Accès typé à PostgreSQL et gestion des migrations                              |
 | Médias          | Cloudinary            | Stockage, optimisation et diffusion des images                                 |
 | Authentification | Sessions + Argon2id  | Session révocable, cookie inaccessible aux scripts                              |
 | Validation      | Zod                   | Règles partagées entre le frontend et l'API                                     |
@@ -367,7 +369,7 @@ Les versions exactes suivantes devront être renseignées dans les fichiers de c
 | Express        | 5.3.0                            |
 | Outils backend | tsx 4.23, ESLint 10.14, Prettier 3.9 |
 | PostgreSQL     | 18.6 (image `postgres:18-alpine`) |
-| Prisma         | À vérifier dans `package.json`   |
+| Prisma         | 7.10.1 (+ `@prisma/adapter-pg`)  |
 | Cloudinary SDK | À vérifier dans `package.json`   |
 | express-session, connect-pg-simple, argon2, express-rate-limit, Zod | À vérifier dans `package.json` |
 | Git            | À préciser selon l'environnement |

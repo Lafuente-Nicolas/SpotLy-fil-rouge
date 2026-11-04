@@ -3,6 +3,9 @@ node_modules/
 
 # Builds
 dist/
+
+# Client Prisma généré (recréé par « npx prisma generate »)
+backend/src/generated/
 build/
 coverage/
 
