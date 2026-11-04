@@ -266,6 +266,23 @@ Les versions majeures et mineures importantes doivent donc être maîtrisées et
 
 Cette approche est particulièrement importante pour un projet CDA car elle permet de documenter précisément l'environnement utilisé et de faciliter sa reproduction par un autre développeur.
 
+### Tests et intégration continue
+
+| Outil | Rôle |
+| --- | --- |
+| **Vitest** | Lance les tests automatiques du backend (`npm test`) |
+| **Supertest** | Envoie des requêtes HTTP à l'application Express sans démarrer le serveur, pour tester les routes de l'API |
+| **GitHub Actions** | Exécute automatiquement les vérifications à chaque Pull Request et à chaque fusion sur `develop` ou `main` |
+
+L'intégration continue (fichier `.github/workflows/ci.yml`) vérifie, pour le backend comme pour le frontend, que :
+
+* les dépendances s'installent à partir du fichier de verrouillage (`npm ci`) ;
+* le code respecte les règles de qualité (`npm run lint`) ;
+* le code compile (`npm run build`) ;
+* les tests passent (`npm test`, pour le backend).
+
+Une Pull Request ne peut être fusionnée que si ces vérifications réussissent (règle de protection des branches sur GitHub). Une erreur est donc détectée avant d'arriver dans `develop`, et non après.
+
 ---
 
 ## 4.13 Sécurité
@@ -380,6 +397,7 @@ Les versions exactes suivantes devront être renseignées dans les fichiers de c
 | MapLibre GL JS | 6.x                              |
 | Express        | 5.3.0                            |
 | Outils backend | tsx 4.23, ESLint 10.14, Prettier 3.9 |
+| Tests          | Vitest 5.1.0, Supertest 7.3.1        |
 | PostgreSQL     | 18.6 (image `postgres:18-alpine`) |
 | Prisma         | 7.10.1 (+ `@prisma/adapter-pg`)  |
 | Cloudinary SDK | À vérifier dans `package.json`   |

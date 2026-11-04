@@ -1,5 +1,7 @@
 # Spotly
 
+[![Intégration continue](https://github.com/Lafuente-Nicolas/SpotLy-fil-rouge/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/Lafuente-Nicolas/SpotLy-fil-rouge/actions/workflows/ci.yml)
+
 > **Find what's worth it, right now.**
 
 Spotly est une application web communautaire de découverte locale destinée aux voyageurs. Elle aide à répondre à une question simple :
@@ -129,6 +131,7 @@ npx prisma db seed         # insère les catégories et les tags
 | `npm run build` | Compiler le TypeScript dans `dist/` |
 | `npm run lint` | Vérifier la qualité du code (ESLint) |
 | `npm run format` | Mettre en forme le code (Prettier) |
+| `npm test` | Lancer les tests automatiques (Vitest) |
 | `npx prisma studio` | Consulter et modifier les données dans le navigateur |
 
 ### Lancer le frontend
