@@ -108,7 +108,7 @@ Commandes utiles :
 ```bash
 nvm use            # utilise Node 24 (version indiquée dans .nvmrc)
 cd backend
-npm install
+npm install        # installe les dépendances et génère le client Prisma
 npm run dev        # démarre l'API sur http://localhost:3000
 ```
 

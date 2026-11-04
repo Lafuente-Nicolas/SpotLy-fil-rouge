@@ -9,7 +9,8 @@
     "build": "tsc",
     "start": "node --env-file=../.env dist/server.js",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
