@@ -8,6 +8,8 @@ Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 
 ### Ajouté
 
+- Initialisation du frontend : Vite, React et TypeScript, Tailwind CSS 4 avec la charte graphique, police Poppins servie par l'application, proxy vers l'API et page de test.
+
 - Schéma Prisma 7 traduit du MPD, première migration (10 tables et 10 contraintes `CHECK`) et données de départ (10 catégories, 8 tags).
 
 - Initialisation du backend : Express et TypeScript, route de test `GET /api/sante`, ESLint et Prettier, version de Node fixée par `.nvmrc`.
