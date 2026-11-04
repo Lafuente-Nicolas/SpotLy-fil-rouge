@@ -20,7 +20,7 @@ Elle permet également de séparer les responsabilités : le frontend gère prin
 
 ## 4.2 Frontend
 
-### React — version 19.2
+### React — version 19.3
 
 React est utilisé pour développer l'interface utilisateur de Spotly.
 
@@ -28,13 +28,13 @@ Le choix de React est principalement lié au caractère fortement interactif de 
 
 L'approche par composants de React permet de découper l'interface en éléments réutilisables et indépendants, ce qui facilite la maintenance et l'évolution de l'application.
 
-La version **19.2** est retenue car elle appartient au canal stable de React. React suit une politique de versionnement sémantique et les versions stables bénéficient d'un cycle de développement et de tests avant publication.
+La version **19.3** (19.3.1 installée) est retenue car elle appartient au canal stable de React. React suit une politique de versionnement sémantique et les versions stables bénéficient d'un cycle de développement et de tests avant publication.
 
 Le choix d'une version stable plutôt qu'une version expérimentale permet de limiter les risques de régression et de garantir un environnement plus fiable pour le développement du projet.
 
 ---
 
-## 4.3 Outil de build — Vite 8.1
+## 4.3 Outil de build — Vite 8.3
 
 Vite est utilisé comme outil de développement et de build du frontend.
 
@@ -44,7 +44,9 @@ Il permet notamment :
 * de gérer le module bundling de l'application ;
 * de générer une version optimisée pour la production.
 
-La version **8.1** est retenue car elle constitue une version stable récente de Vite. Vite 8 a introduit Rolldown comme bundler unifié et Vite 8.1 apporte notamment des améliorations et corrections par rapport à la première version majeure.
+La version **8.3** (8.3.5 installée) est retenue car elle constitue la version stable la plus récente de Vite au moment de l'initialisation. Vite 8 a introduit Rolldown comme bundler unifié.
+
+En développement, Vite transmet les requêtes `/api` à l'API (port 3000) grâce à un **proxy**. Pour le navigateur, le frontend et l'API ont ainsi la même adresse, ce qui permet d'utiliser le cookie de session (décision D23) sans configuration supplémentaire.
 
 Le choix de Vite est également cohérent avec l'objectif de construire une application frontend légère et performante.
 
@@ -88,7 +90,16 @@ Spotly étant conçu selon une approche **mobile-first**, Tailwind permet de gé
 
 Le choix de la version doit être basé sur une version stable compatible avec React 19 et Vite 8, afin d'éviter d'introduire une dépendance expérimentale inutile.
 
-**Version : à renseigner selon la version retenue dans le projet.**
+**Version installée : Tailwind CSS 4.3** (4.3.4), avec son module pour Vite (`@tailwindcss/vite`).
+
+La charte graphique (décision D17) est déclarée une seule fois dans `frontend/src/index.css`, avec la directive `@theme` de Tailwind 4. Les couleurs sont ensuite utilisables directement dans les classes, par exemple `bg-dark-teal` ou `text-coral-glow`.
+
+### Police — Poppins
+
+La police Poppins est installée avec le paquet `@fontsource/poppins` et **servie par l'application**, sans appel à Google Fonts :
+
+* **RGPD :** aucune requête vers un service extérieur, donc aucune donnée de l'utilisateur (comme son adresse IP) n'est transmise à Google ;
+* **éco-conception :** seules les quatre graisses de la charte (400, 500, 600 et 700) sont chargées, et uniquement pour l'alphabet latin, qui contient tous les caractères du français. Les fichiers de police de la version de production passent ainsi de 24 à 8, et chaque fichier pèse environ 8 Ko au format WOFF2.
 
 ---
 
@@ -338,10 +349,10 @@ Ces contraintes permettent de rendre l'application utilisable par un public plus
 
 | Domaine         | Technologie / version | Justification                                                                  |
 | --------------- | --------------------- | ------------------------------------------------------------------------------ |
-| Interface       | React 19.2            | Interface interactive basée sur des composants réutilisables et version stable |
-| Build           | Vite 8.1              | Développement rapide et chaîne de build moderne                                |
+| Interface       | React 19.3            | Interface interactive basée sur des composants réutilisables et version stable |
+| Build           | Vite 8.3              | Développement rapide et chaîne de build moderne                                |
 | Langage         | TypeScript 6.0        | Typage statique et meilleure maintenabilité                                    |
-| CSS             | Tailwind CSS          | Responsive mobile-first et cohérence de l'interface                            |
+| CSS             | Tailwind CSS 4.3      | Responsive mobile-first et cohérence de l'interface                            |
 | Cartographie    | MapLibre GL JS 6.x + tuiles OpenFreeMap | Carte interactive libre, tuiles vectorielles gratuites et légères |
 | Runtime backend | Node.js 24 LTS        | Stabilité, maintenance et support à long terme                                 |
 | API             | Express 5.3           | API REST légère et flexible                                                    |
@@ -361,10 +372,11 @@ Les versions exactes suivantes devront être renseignées dans les fichiers de c
 | Technologie    | Version                          |
 | -------------- | -------------------------------- |
 | Node.js        | 24.22.2 LTS (fixée par `.nvmrc`) |
-| React          | 19.2                             |
-| Vite           | 8.1.x                            |
+| React          | 19.3.1                           |
+| Vite           | 8.3.5                            |
 | TypeScript     | 6.0.3                            |
-| Tailwind CSS   | À vérifier dans `package.json`   |
+| Tailwind CSS   | 4.3.4                            |
+| Police Poppins | @fontsource/poppins 5.3.0        |
 | MapLibre GL JS | 6.x                              |
 | Express        | 5.3.0                            |
 | Outils backend | tsx 4.23, ESLint 10.14, Prettier 3.9 |

@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+/* Charte graphique de Spotly (décision D17) : couleurs et police utilisables
+   directement dans les classes Tailwind, par exemple bg-dark-teal ou text-coral-glow. */
+@theme {
+  --font-sans: 'Poppins', system-ui, sans-serif;
+
+  --color-dark-teal: #0f4c5c; /* couleur principale : boutons, éléments actifs, marqueurs */
+  --color-coral-glow: #ff7f50; /* accent : bouton Ajouter, favoris, actions fortes */
+  --color-muted-teal: #7a9e7e; /* secondaire : catégories, tags */
+  --color-carbon-black: #1e1e1e; /* texte principal */
+  --color-gris-clair: #f5f5f5; /* fond secondaire */
+}
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-carbon-black;
+  }
+}

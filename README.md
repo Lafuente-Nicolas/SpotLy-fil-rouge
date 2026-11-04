@@ -131,7 +131,24 @@ npx prisma db seed         # insère les catégories et les tags
 | `npm run format` | Mettre en forme le code (Prettier) |
 | `npx prisma studio` | Consulter et modifier les données dans le navigateur |
 
-Les instructions pour lancer le frontend seront ajoutées avec sa mise en place.
+### Lancer le frontend
+
+L'API doit tourner dans un autre terminal (voir ci-dessus).
+
+```bash
+cd frontend
+npm install
+npm run dev        # démarre l'interface sur http://localhost:5173
+```
+
+La page de test affiche « API connectée » quand le frontend communique avec l'API.
+
+| Commande (dans `frontend/`) | Effet |
+| --- | --- |
+| `npm run dev` | Démarrer l'interface en développement |
+| `npm run build` | Construire la version de production dans `dist/` |
+| `npm run lint` | Vérifier la qualité du code (ESLint) |
+| `npm run format` | Mettre en forme le code (Prettier) |
 
 ---
 
