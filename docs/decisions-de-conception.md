@@ -335,6 +335,23 @@ La validation du frontend sert au confort de l'utilisateur. Celle de l'API reste
 
 ---
 
+## D26 — Docker pour l'environnement
+
+**Décision :**
+
+- **En développement**, seule la base de données PostgreSQL tourne dans un conteneur Docker, lancé avec **Docker Compose** (`docker-compose.yml` à la racine). Le frontend et l'API tournent directement sur la machine, avec `npm run dev`.
+- **Au déploiement**, toute l'application (API, frontend et base) sera conteneurisée.
+- Les identifiants sont lus dans un fichier `.env`, jamais versionné. Le modèle `.env.example` est versionné.
+
+**Justification :**
+
+- **Reproductibilité :** tout développeur obtient la même version de PostgreSQL avec une seule commande, sans installation manuelle.
+- **Simplicité :** garder le frontend et l'API hors de Docker en développement conserve le rechargement automatique du code et des temps de démarrage courts.
+- **Sécurité :** aucun mot de passe n'est écrit dans le code ni dans Git.
+- **Éco-conception :** l'image `alpine` est plus légère que l'image standard, et un seul conteneur tourne en développement.
+
+---
+
 ## Points techniques restant à décider
 
 Ces choix ne changent pas le périmètre fonctionnel. Ils seront tranchés avec le cahier des charges technique.

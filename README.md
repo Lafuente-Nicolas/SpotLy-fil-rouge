@@ -76,6 +76,39 @@ Les choix et les versions sont justifiés dans le [cahier des charges technique]
 
 ---
 
+## Installation (développement)
+
+**Prérequis :** [Node.js](https://nodejs.org/) 24 LTS, [Docker Desktop](https://www.docker.com/products/docker-desktop/) et Git.
+
+```bash
+# 1. Cloner le dépôt
+git clone https://github.com/Lafuente-Nicolas/SpotLy-fil-rouge.git
+cd SpotLy-fil-rouge
+
+# 2. Créer le fichier des variables d'environnement à partir du modèle
+cp .env.example .env
+
+# 3. Démarrer la base de données PostgreSQL
+docker compose up -d
+
+# 4. Installer les outils du projet (vérification des messages de commit)
+npm install
+```
+
+Commandes utiles :
+
+| Commande | Effet |
+| --- | --- |
+| `docker compose ps` | Voir si la base tourne (état `healthy` quand elle est prête) |
+| `docker compose logs db` | Afficher les messages de PostgreSQL |
+| `docker compose down` | Arrêter la base (les données sont conservées) |
+| `docker compose down -v` | Arrêter la base **et supprimer ses données** |
+| `docker compose exec db psql -U spotly -d spotly` | Ouvrir une console SQL dans la base |
+
+Les instructions pour lancer l'API et le frontend seront ajoutées avec leur mise en place.
+
+---
+
 ## Éco-conception
 
 L'éco-conception guide les choix techniques et doit être démontrée par des mesures. Les principaux leviers identifiés sont :

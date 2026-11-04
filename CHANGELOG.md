@@ -6,6 +6,11 @@ Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 
 ## [Non publié]
 
+### Ajouté
+
+- Base de données PostgreSQL pour le développement avec Docker Compose, modèle des variables d'environnement (`.env.example`) et décision D26.
+- Instructions d'installation dans le README.
+
 ## [0.2.0] — 2026-11-03 — Conception technique
 
 ### Ajouté
