@@ -108,11 +108,20 @@ Commandes utiles :
 ```bash
 nvm use            # utilise Node 24 (version indiquée dans .nvmrc)
 cd backend
-npm install
+npm install        # installe les dépendances et génère le client Prisma
 npm run dev        # démarre l'API sur http://localhost:3000
 ```
 
 Pour vérifier qu'elle répond, ouvrir http://localhost:3000/api/sante : la réponse doit être `{"statut":"ok"}`.
+
+### Créer la base de données
+
+La base Docker doit tourner (`docker compose up -d`). Dans `backend/` :
+
+```bash
+npx prisma migrate dev     # crée les tables (migrations du dossier prisma/migrations)
+npx prisma db seed         # insère les catégories et les tags
+```
 
 | Commande (dans `backend/`) | Effet |
 | --- | --- |
@@ -120,6 +129,7 @@ Pour vérifier qu'elle répond, ouvrir http://localhost:3000/api/sante : la rép
 | `npm run build` | Compiler le TypeScript dans `dist/` |
 | `npm run lint` | Vérifier la qualité du code (ESLint) |
 | `npm run format` | Mettre en forme le code (Prettier) |
+| `npx prisma studio` | Consulter et modifier les données dans le navigateur |
 
 Les instructions pour lancer le frontend seront ajoutées avec sa mise en place.
 

@@ -8,6 +8,8 @@ Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 
 ### Ajouté
 
+- Schéma Prisma 7 traduit du MPD, première migration (10 tables et 10 contraintes `CHECK`) et données de départ (10 catégories, 8 tags).
+
 - Initialisation du backend : Express et TypeScript, route de test `GET /api/sante`, ESLint et Prettier, version de Node fixée par `.nvmrc`.
 
 - Base de données PostgreSQL pour le développement avec Docker Compose, modèle des variables d'environnement (`.env.example`) et décision D26.

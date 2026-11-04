@@ -6,6 +6,9 @@ dist/
 build/
 coverage/
 
+# Client Prisma généré (recréé par « npx prisma generate », lancé aussi par npm install)
+backend/src/generated/
+
 # Variables d'environnement (secrets) : seul le modèle .env.example est versionné
 .env
 .env.*

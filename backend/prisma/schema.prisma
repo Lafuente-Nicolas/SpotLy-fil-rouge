@@ -1,0 +1,213 @@
+// Schéma Prisma de Spotly : traduction du MPD (docs/mpd.md).
+// Les modèles utilisent des noms en camelCase côté TypeScript,
+// reliés aux noms PostgreSQL du MPD par @map (colonnes) et @@map (tables).
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Listes de valeurs (types énumérés) ----------
+
+enum RoleUtilisateur {
+  UTILISATEUR
+  ADMINISTRATEUR
+
+  @@map("role_utilisateur")
+}
+
+enum StatutPublication {
+  PUBLIE
+  MASQUE
+  SUPPRIME
+
+  @@map("statut_publication")
+}
+
+enum MotifSignalement {
+  CONTENU_INAPPROPRIE
+  INFORMATION_INCORRECTE
+  SPAM
+  SPOT_INEXISTANT
+  AUTRE
+
+  @@map("motif_signalement")
+}
+
+enum StatutSignalement {
+  EN_ATTENTE
+  TRAITE
+  CLASSE_SANS_SUITE
+
+  @@map("statut_signalement")
+}
+
+// ---------- Tables issues des entités ----------
+
+model Utilisateur {
+  id                 Int             @id @default(autoincrement()) @map("id_utilisateur")
+  pseudo             String          @unique @db.VarChar(30)
+  email              String          @unique @db.VarChar(255)
+  motDePasse         String          @map("mot_de_passe") @db.VarChar(255)
+  prenom             String?         @db.VarChar(50)
+  nom                String?         @db.VarChar(50)
+  ville              String?         @db.VarChar(100)
+  photoProfil        String?         @map("photo_profil") @db.VarChar(500)
+  role               RoleUtilisateur @default(UTILISATEUR)
+  dateInscription    DateTime        @default(now()) @map("date_inscription") @db.Timestamptz()
+  dateAcceptationCgu DateTime        @map("date_acceptation_cgu") @db.Timestamptz()
+
+  spots        Spot[]
+  commentaires Commentaire[]
+  signalements Signalement[]
+  favoris      Favori[]
+  notes        Note[]
+
+  @@map("utilisateur")
+}
+
+model Categorie {
+  id      Int    @id @default(autoincrement()) @map("id_categorie")
+  libelle String @unique @db.VarChar(50)
+  icone   String @db.VarChar(50)
+
+  spots Spot[]
+
+  @@map("categorie")
+}
+
+model Tag {
+  id      Int    @id @default(autoincrement()) @map("id_tag")
+  libelle String @unique @db.VarChar(50)
+
+  spots SpotTag[]
+
+  @@map("tag")
+}
+
+model Spot {
+  id               Int               @id @default(autoincrement()) @map("id_spot")
+  titre            String            @db.VarChar(100)
+  description      String
+  latitude         Decimal           @db.Decimal(9, 6)
+  longitude        Decimal           @db.Decimal(9, 6)
+  adresse          String?           @db.VarChar(255)
+  dureeMinutes     Int               @map("duree_minutes") @db.SmallInt
+  conseil          String?           @db.VarChar(300)
+  statut           StatutPublication @default(PUBLIE)
+  dateCreation     DateTime          @default(now()) @map("date_creation") @db.Timestamptz()
+  dateModification DateTime          @default(now()) @updatedAt @map("date_modification") @db.Timestamptz()
+  idCreateur       Int               @map("id_createur")
+  idCategorie      Int               @map("id_categorie")
+
+  createur  Utilisateur @relation(fields: [idCreateur], references: [id], onDelete: Cascade)
+  categorie Categorie   @relation(fields: [idCategorie], references: [id], onDelete: Restrict)
+
+  photos       Photo[]
+  commentaires Commentaire[]
+  signalements Signalement[]
+  favoris      Favori[]
+  notes        Note[]
+  tags         SpotTag[]
+
+  @@index([latitude, longitude], map: "idx_spot_position")
+  @@index([idCategorie], map: "idx_spot_categorie")
+  @@index([idCreateur], map: "idx_spot_createur")
+  @@map("spot")
+}
+
+model Photo {
+  id               Int      @id @default(autoincrement()) @map("id_photo")
+  url              String   @db.VarChar(500)
+  identifiantMedia String   @unique @map("identifiant_media") @db.VarChar(255)
+  texteAlternatif  String?  @map("texte_alternatif") @db.VarChar(150)
+  ordre            Int      @db.SmallInt
+  dateAjout        DateTime @default(now()) @map("date_ajout") @db.Timestamptz()
+  idSpot           Int      @map("id_spot")
+
+  spot Spot @relation(fields: [idSpot], references: [id], onDelete: Cascade)
+
+  @@unique([idSpot, ordre], map: "uq_photo_spot_ordre")
+  @@map("photo")
+}
+
+model Commentaire {
+  id              Int               @id @default(autoincrement()) @map("id_commentaire")
+  contenu         String            @db.VarChar(1000)
+  statut          StatutPublication @default(PUBLIE)
+  datePublication DateTime          @default(now()) @map("date_publication") @db.Timestamptz()
+  idAuteur        Int               @map("id_auteur")
+  idSpot          Int               @map("id_spot")
+
+  auteur Utilisateur @relation(fields: [idAuteur], references: [id], onDelete: Cascade)
+  spot   Spot        @relation(fields: [idSpot], references: [id], onDelete: Cascade)
+
+  signalements Signalement[]
+
+  @@index([idSpot], map: "idx_commentaire_spot")
+  @@map("commentaire")
+}
+
+model Signalement {
+  id              Int                @id @default(autoincrement()) @map("id_signalement")
+  motif           MotifSignalement
+  description     String?            @db.VarChar(500)
+  statut          StatutSignalement  @default(EN_ATTENTE)
+  dateSignalement DateTime           @default(now()) @map("date_signalement") @db.Timestamptz()
+  dateTraitement  DateTime?          @map("date_traitement") @db.Timestamptz()
+  idAuteur        Int                @map("id_auteur")
+  idSpot          Int?               @map("id_spot")
+  idCommentaire   Int?               @map("id_commentaire")
+
+  auteur      Utilisateur  @relation(fields: [idAuteur], references: [id], onDelete: Cascade)
+  spot        Spot?        @relation(fields: [idSpot], references: [id], onDelete: Cascade)
+  commentaire Commentaire? @relation(fields: [idCommentaire], references: [id], onDelete: Cascade)
+
+  @@index([statut], map: "idx_signalement_statut")
+  @@map("signalement")
+}
+
+// ---------- Tables issues des associations plusieurs-à-plusieurs ----------
+
+model Favori {
+  idUtilisateur Int      @map("id_utilisateur")
+  idSpot        Int      @map("id_spot")
+  dateAjout     DateTime @default(now()) @map("date_ajout") @db.Timestamptz()
+
+  utilisateur Utilisateur @relation(fields: [idUtilisateur], references: [id], onDelete: Cascade)
+  spot        Spot        @relation(fields: [idSpot], references: [id], onDelete: Cascade)
+
+  @@id([idUtilisateur, idSpot])
+  @@map("favori")
+}
+
+model Note {
+  idUtilisateur Int      @map("id_utilisateur")
+  idSpot        Int      @map("id_spot")
+  valeur        Int      @db.SmallInt
+  dateNote      DateTime @default(now()) @map("date_note") @db.Timestamptz()
+
+  utilisateur Utilisateur @relation(fields: [idUtilisateur], references: [id], onDelete: Cascade)
+  spot        Spot        @relation(fields: [idSpot], references: [id], onDelete: Cascade)
+
+  @@id([idUtilisateur, idSpot])
+  @@index([idSpot], map: "idx_note_spot")
+  @@map("note")
+}
+
+model SpotTag {
+  idSpot Int @map("id_spot")
+  idTag  Int @map("id_tag")
+
+  spot Spot @relation(fields: [idSpot], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [idTag], references: [id], onDelete: Cascade)
+
+  @@id([idSpot, idTag])
+  @@index([idTag], map: "idx_spot_tag_tag")
+  @@map("spot_tag")
+}

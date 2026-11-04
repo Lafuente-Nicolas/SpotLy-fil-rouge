@@ -12,7 +12,7 @@ Le MPD est la dernière étape de la méthode Merise. Il adapte le [MLD](mld.md)
 
 Le MPD est livré sous la forme d'un script SQL exécutable : [`sql/mpd-spotly.sql`](sql/mpd-spotly.sql). Ce document explique chaque choix du script.
 
-> Dans le projet, les tables seront créées par les **migrations Prisma** (étape suivante). Le schéma Prisma reproduira exactement ce MPD. Les deux contraintes que Prisma ne sait pas écrire (voir section 6) seront ajoutées à la main dans la migration.
+> Dans le projet, les tables sont créées par les **migrations Prisma** (voir section 12). Le schéma Prisma reproduit exactement ce MPD. Les contraintes `CHECK`, que Prisma ne sait pas écrire (voir section 6), sont ajoutées à la main dans la migration.
 
 ---
 
@@ -212,7 +212,7 @@ Une contrainte `CHECK` fait refuser par la base une ligne qui ne respecte pas un
 | **ck_signalement_une_cible** | signalement | exactement une des deux colonnes id_spot et id_commentaire est remplie | RG-16, D10 |
 | **ck_signalement_date_traitement** | signalement | date_traitement est vide tant que le statut vaut `EN_ATTENTE`, et remplie sinon | RG-17, D13 |
 
-**Les deux contraintes en gras** sont celles que Prisma ne sait pas déclarer. Elles seront ajoutées à la main dans le fichier SQL de la migration.
+Prisma ne sait déclarer **aucune** contrainte `CHECK` dans son schéma. Les dix contraintes ci-dessus sont donc ajoutées à la main à la fin du fichier SQL de la première migration (`backend/prisma/migrations/…_init/migration.sql`). Les deux contraintes **en gras** sont les plus importantes, car elles portent des règles que les cardinalités du MCD ne pouvaient pas exprimer.
 
 `ck_signalement_une_cible` utilise la fonction `num_nonnulls(id_spot, id_commentaire)`. Elle compte les valeurs non vides, et la contrainte impose que ce nombre soit égal à 1.
 
@@ -301,14 +301,20 @@ Cette table ne fait pas partie du modèle métier : elle n'apparaît ni dans le 
 
 ---
 
-## 12. Étape suivante : le schéma Prisma
+## 12. Le schéma Prisma
 
-Le fichier `schema.prisma` décrira les mêmes tables sous forme de modèles. La correspondance est directe :
+Le MPD est traduit dans le fichier [`backend/prisma/schema.prisma`](../backend/prisma/schema.prisma). La correspondance est directe :
 
 - une table devient un `model` ;
 - un type énuméré devient un `enum` ;
-- les noms PostgreSQL sont conservés grâce à `@@map` et `@map`.
+- les colonnes ont un nom en camelCase côté TypeScript (`dureeMinutes`), relié au nom PostgreSQL du MPD (`duree_minutes`) par `@map`. Les tables sont reliées par `@@map`.
 
 Pour les identifiants, Prisma (`@default(autoincrement())`) écrit `SERIAL`. C'est l'ancienne écriture PostgreSQL du même mécanisme : un nombre attribué automatiquement.
 
-La première migration générée par Prisma sera complétée à la main avec les deux contraintes `CHECK` du signalement.
+**Création de la base, en trois étapes :**
+
+1. `npx prisma migrate dev --create-only --name init` génère le SQL de la première migration, sans l'appliquer ;
+2. les dix contraintes `CHECK` de la section 6 sont ajoutées à la main à la fin de ce fichier ;
+3. `npx prisma migrate dev` applique la migration, puis `npx prisma db seed` insère les 10 catégories et les tags.
+
+**Vérification :** insérer une note de 6 est refusé par la base (`violates check constraint "ck_note_valeur"`).
