@@ -8,6 +8,8 @@ Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 
 ### Ajouté
 
+- Premiers tests de l'API (Vitest et Supertest) et intégration continue avec GitHub Actions : lint, compilation et tests du backend et du frontend à chaque Pull Request.
+
 - Initialisation du frontend : Vite, React et TypeScript, Tailwind CSS 4 avec la charte graphique, police Poppins servie par l'application, proxy vers l'API et page de test.
 
 - Schéma Prisma 7 traduit du MPD, première migration (10 tables et 10 contraintes `CHECK`) et données de départ (10 catégories, 8 tags).

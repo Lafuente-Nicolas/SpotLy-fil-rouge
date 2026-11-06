@@ -80,9 +80,9 @@ Un commit dont le message ne respecte pas le format est alors refusé.
 - Son titre suit le format des commits : `feat(spots): ajouter un spot (US-07)`.
 - Sa description suit le modèle proposé (User Story, changements, vérifications).
 - Le lien de la Pull Request est ajouté sur la carte Trello de la User Story.
-- La Pull Request est fusionnée quand les critères d'acceptation sont remplis et que les tests passent.
+- La Pull Request est fusionnée quand les critères d'acceptation sont remplis et que l'**intégration continue** réussit : GitHub Actions vérifie automatiquement le lint, la compilation et les tests du backend et du frontend.
 
-**Protection des branches :** sur GitHub, `main` et `develop` sont protégées (*Settings → Branches*). Une Pull Request est obligatoire pour les modifier.
+**Protection des branches :** sur GitHub, `main` et `develop` sont protégées (*Settings → Branches*). Une Pull Request est obligatoire pour les modifier, et les vérifications « Backend » et « Frontend » de l'intégration continue doivent réussir.
 
 ---
 
